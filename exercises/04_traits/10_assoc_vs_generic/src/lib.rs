@@ -13,6 +13,44 @@
 // You don't have to though: it's perfectly okay to write three separate
 // implementations manually. Venture further only if you're curious.
 
+// TODO: Powerという新しいトレイトを定義してください。このトレイトにはpowerというメソッドがあり、selfをn乗します。
+// トレイトの定義とその実装がテストのコンパイルと成功に十分であるべきです。
+
+// 推奨事項: 一度にすべてのケースを扱うために汎用的な実装を書くことに誘惑されるかもしれません。しかし、これはかなり複雑であり、追加のクレート（例えばnum-traits）の使用が必要になります。
+// それでも、高度に汎用的な実装の複雑さを避けるために、単純なマクロを使用する方が好ましいかもしれません。
+// もし興味があれば、「Little book of Rust macros」(https://veykril.github.io/tlborm/)をチェックして、それについてもっと学ぶことができます。
+// ただし、必ずしもそうする必要はありません。手動で三つの別々の実装を書くことも完全に問題ありません。興味がある場合のみさらに進んでください。
+
+pub trait Power<T> {
+    type Output;
+
+    fn power(&self, n: T) -> Self::Output;
+}
+
+impl Power<u16> for u32 {
+    type Output = u32;
+
+    fn power(&self, n: u16) -> Self::Output {
+        self.pow(n.into())
+    }
+}
+
+impl Power<&u32> for u32 {
+    type Output = u32;
+
+    fn power(&self, n: &u32) -> Self::Output {
+        self.power(*n)
+    }
+}
+
+impl Power<u32> for u32 {
+    type Output = u32;
+
+    fn power(&self, n: u32) -> Self::Output {
+        self.pow(n)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Power;
